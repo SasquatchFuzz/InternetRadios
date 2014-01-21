@@ -1,0 +1,4 @@
+pkill shairport
+mpc clear
+mpc load npr
+mpc play 1

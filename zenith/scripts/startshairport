@@ -1,0 +1,4 @@
+mpc clear
+~/shairport/./shairport -a 'Zenith' &
+
+
