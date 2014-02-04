@@ -51,12 +51,12 @@ npm install -d
 
 #### Run
 ```shell
-npm install -d
+node app.js
 ```
 Now open up a browser to the appropriate site (for example http://zenithradio.local:8080).  On iOS I save the pages to the homescreen for quick access.
 
 <a name="todo"/>
 ## To-do:
-* Add SW volume control.
+* Add custom SW volume control using [this tutorial](http://ruwix.com/javascript-volume-slider-control/) as an example.
 
 
