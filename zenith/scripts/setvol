@@ -1,6 +1,6 @@
 #!/bin/bash
 #
 
-amixer cset iface=MIXER,name="Master Playback Volume" $1 >/dev/null
+amixer set Master $1 >/dev/null
 mixer=$(amixer get Master | grep 'Front Left:')
 echo $mixer | cut -d ' ' -f4 
