@@ -28,9 +28,20 @@
     padding-top:131px;
     
   }
+  #volume {
+    position: absolute;
+    top:410px;
+    width:320px;
+    height:75px;
+    background-color:rgba(0,0, 0, 0.25);
+  }
+
   #footer {
+    position: absolute;
+    top: 520;
     font-family: 'Source Code Pro', san-serif;
-    height:27px;
+    height:28;
+    width:320;
     background-color:rgba(0, 0, 0, 0.8);
     padding-top:5px;
     color: #fff;
@@ -45,6 +56,7 @@
   // on connection to server, request the current station
   socket.on('connect', function() {
     socket.emit('getCurrentStation');
+    setVol();
   });
 
   socket.on('updatestation', function (station) {
@@ -64,6 +76,31 @@
     }
   });
 
+  socket.on('updatevolume', function (volume)
+  {
+    var c=document.getElementById("volume");
+    var ctx=c.getContext("2d");
+    ctx.fillStyle="#111111";
+    var hpad = 2;
+    var vpad = 15;
+    var height = c.height;
+    var width = Math.floor(((volume/31) * (c.width-(2*hpad))) + 0.5)
+    
+    for(var i=0; i<=32; i++){  
+      ctx.lineWidth = 1;
+      var adaptedX = Math.floor(i*((c.width-(2*hpad))/32)+0.5) + hpad;
+      ctx.beginPath();
+      ctx.moveTo(adaptedX, vpad-4);
+      ctx.lineTo(adaptedX, c.height-vpad+4);
+      ctx.stroke();
+    }
+
+    ctx.fillStyle="#111111";  
+    ctx.fillRect(hpad, vpad, width, height-(2*vpad));
+    ctx.fillStyle="#CCCCCC";
+    ctx.fillRect(hpad+width,vpad,c.width-width-(2*hpad),height-(2*vpad));
+  });
+
   function toggle()
   {
     socket.emit('getNextStation', 'npr');
@@ -74,6 +111,16 @@
     event.preventDefault();
   }
 
+  function setVol()
+  {
+    var c=document.getElementById("volume");
+    var e = event;
+    if(e.pageX < (c.width/2))
+      socket.emit('setVolume', '1-');
+    else
+      socket.emit('setVolume', '1+');
+  }
+
 </script>
 </head>
 <body onload="window.top.scrollTo(0,1);" ontouchmove="blockmove();"> 
@@ -81,6 +128,7 @@
     <div id="body">
       <img id='station' src='btn_shair.png' onclick="toggle();"/>
     </div>
+    <canvas id="volume" onclick="setVol();"></canvas>
     <div id="footer">@SasquatchFuzz</div>
   </div>
 </body>
