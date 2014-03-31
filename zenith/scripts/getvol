@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+
+mixer=$(amixer get Master | grep 'Front Left:')
+echo $mixer | cut -d ' ' -f4 

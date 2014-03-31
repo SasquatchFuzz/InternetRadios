@@ -1,4 +1,5 @@
+#!/bin/bash
+#
+
 mpc clear
-~/shairport/./shairport -a 'Zenith' &
-
-
+/opt/shairport/./shairport -a 'Zenith' &
