@@ -62,6 +62,32 @@ io.sockets.on('connection', function (socket) {
     io.sockets.emit('updatestation', station);
   });
 
+  socket.on('getVolume', function () {
+    console.log('getVolume');
+    child = exec('scripts/./getvol', // command line argument directly in string
+      function (error, stdout, stderr) {      // one easy function to capture data/errors
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        io.sockets.emit('updatevolume', stdout);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        }
+    });
+  });
+
+  socket.on('setVolume', function (volume) {
+      child = exec('scripts/./setvol '+volume, // command line argument directly in string
+      function (error, stdout, stderr) {      // one easy function to capture data/errors
+        console.log('stdout: ' + stdout);
+        console.log('stderr: ' + stderr);
+        io.sockets.emit('updatevolume', stdout);
+        if (error !== null) {
+          console.log('exec error: ' + error);
+        }
+    });
+
+  });
+
   // when the client emits 'getCurrentStation', replay with the value
   socket.on('getCurrentStation', function(){
     console.log('getCurrentStation:',station);
