@@ -46,6 +46,7 @@ sudo mpc save npr
 CD into the desired radio subfolder and then run the Node Package Manager to install the required packages (defined in package.json).  For example:
 ```shell
 cd zenith
+npm config set registry http://registry.npmjs.org/
 npm install -d
 ```
 
@@ -57,6 +58,6 @@ Now open up a browser to the appropriate site (for example http://zenithradio.lo
 
 <a name="todo"/>
 ## To-do:
-* Add custom SW volume control using [this tutorial](http://ruwix.com/javascript-volume-slider-control/) as an example.
-
+* Design a better looking vol indicator.
+* Implement the other radios.
 
