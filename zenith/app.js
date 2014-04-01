@@ -32,6 +32,13 @@ io.sockets.on('connection', function (socket) {
 
   console.log('connection');
 
+  // when the client emits 'getCurrentStation', replay with the value
+  socket.on('getCurrentStation', function(){
+    console.log('getCurrentStation:',station);
+    // echo to client they've connected
+    socket.emit('updatestation', station);
+  });
+
   // when the client emits 'getNextStation', this listens and executes
   socket.on('getNextStation', function () {
     console.log('getNextStation');
@@ -85,13 +92,5 @@ io.sockets.on('connection', function (socket) {
           console.log('exec error: ' + error);
         }
     });
-
-  });
-
-  // when the client emits 'getCurrentStation', replay with the value
-  socket.on('getCurrentStation', function(){
-    console.log('getCurrentStation:',station);
-    // echo to client they've connected
-    socket.emit('updatestation', station);
   });
 });
