@@ -11,79 +11,120 @@
   body {
     margin:0;
     padding:0;
-    background:#fff no-repeat;
-    width:320px;
-    height:460px;
-    overflow-x:hidden;
-    overflow-y:hidden;
+    background:#fff;
+    width: 320px;
+    height: 548px;
+    overflow-x: hidden;
+    overflow-y: hidden;
   }
-  #body {
-    font-family: tahoma, sans-serif;
-    font-family: 'Source Code Pro', san-serif;
-    font-size: 50px;
-    height:294px;
-    background-color:rgba(0, 0, 0, 0.0);
-    color: #FFF;
-    text-align:center;
-    padding-top:131px;
-    
+  #station{
+    margin-left: 29px;
   }
-  #footer {
-    font-family: 'Source Code Pro', san-serif;
-    height:27px;
-    background-color:rgba(0, 0, 0, 0.8);
-    padding-top:5px;
-    color: #fff;
-    border-color: #CCD0BA;
-    text-align:center;
+  #volumedown { 
+    margin-left: 29px;
+  } 
+  #volumemute { 
+    margin-left: 7px; 
+    margin-right: 7px;
+  }
+  .volume { 
+    margin-top: 11px;
+  }
+  #volumebar { 
+    margin-top: 11px;
+    margin-left: 29px;
+    width: 262px;
+    height: 34px;
+  }
+  .dark {
+    -webkit-filter: brightness(50%);
   }
 </style>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  var socket = io.connect('http://zenithradio.local:8080');
+  var socket = io.connect('http://philco.local:8080');
 
   // on connection to server, request the current station
   socket.on('connect', function() {
     socket.emit('getCurrentStation');
+    socket.emit('getVolume');
   });
 
-  socket.on('updatestation', function (station) {
-    var theImg = document.getElementById('station');
+  socket.on('updatestation', function (new_station) {
+    var station = document.getElementById('station');
     
-    if(station == 'kexp')
+    station.className = '';
+
+    if(new_station == 'kexp')
     {
-      theImg.src='btn_kexp.png';
+      station.src='btn_kexp.png';
     }
-    else if(station == 'npr')
+    else if(new_station == 'npr')
     {
-      theImg.src='btn_npr.png';
+      station.src='btn_npr.png';
+    }
+    else if(new_station == 'kids')
+    {
+      station.src='btn_kids.png';
     }
     else // shairport
     {
-      theImg.src='btn_shair.png';
+      station.src='btn_shair.png';
     }
   });
 
-  function toggle()
+  socket.on('updatevolume', function (volume)
   {
+    var buttons=document.getElementsByClassName("volume");
+    for (var i = 0; i < buttons.length; ++i) {
+      var btn = buttons[i];  
+      btn.className='volume';
+    }
+
+    var c=document.getElementById("volumebar");
+    var ctx=c.getContext("2d");
+    ctx.fillStyle="#fff";
+    ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillStyle="#740c15";
+    ctx.fillRect(0,0,(volume/31)*c.width,c.height);
+  });
+
+  function toggleStation()
+  {
+    var station = document.getElementById('station');
+    station.className = 'dark';
     socket.emit('getNextStation', 'npr');
   }
 
-  function blockmove()
+  function blockMove()
   {
     event.preventDefault();
   }
 
+  function setVol(value, button)
+  {
+    var theButton = document.getElementById(button);
+    
+    theButton.className='volume dark';
+    if( value == -1)
+      socket.emit('setVolume', '1-');
+    else if(value == 1)
+      socket.emit('setVolume', '1+');
+    else
+      socket.emit('setVolume', '0');
+  }
 </script>
 </head>
-<body onload="window.top.scrollTo(0,1);" ontouchmove="blockmove();"> 
+<body onload="window.top.scrollTo(0,1);" ontouchmove="blockMove();"> 
   <div id="container">
     <div id="body">
-      <img id='station' src='btn_shair.png' onclick="toggle();"/>
-      <br>
-      <input type="range" name="volume" min="1" max="100">
+      <img id='header' src='header.png'/>
+      <img id='station' src='btn_shair.png' onclick="toggleStation();"/>
+      <img id='volumedown' class='volume' src='btn_vol_down.png' onclick="setVol(-1,'volumedown');"/>
+      <img id='volumemute' class='volume' src='btn_vol_mute.png' onclick="setVol(0,'volumemute');"/>
+      <img id='volumeup' class='volume' src='btn_vol_up.png' onclick="setVol(1,'volumeup');"/>
+      <canvas id="volumebar"></canvas>
     </div>
-    <div id="footer">@SasquatchFuzz</div>
   </div>
 </body>
 </html>
