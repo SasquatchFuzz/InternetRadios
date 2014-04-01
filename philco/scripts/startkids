@@ -1,3 +1,6 @@
+#!/bin/bash
+#
+
 pkill shairport
 mpc clear
 mpc load kids
