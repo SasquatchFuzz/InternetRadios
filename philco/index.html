@@ -1,0 +1,89 @@
+<html>
+<head>
+  <title>Philco Radio</title>
+  <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+  <style media="screen" type="text/css">
+  html,
+  body {
+    margin:0;
+    padding:0;
+    background:#fff no-repeat;
+    width:320px;
+    height:460px;
+    overflow-x:hidden;
+    overflow-y:hidden;
+  }
+  #body {
+    font-family: tahoma, sans-serif;
+    font-family: 'Source Code Pro', san-serif;
+    font-size: 50px;
+    height:294px;
+    background-color:rgba(0, 0, 0, 0.0);
+    color: #FFF;
+    text-align:center;
+    padding-top:131px;
+    
+  }
+  #footer {
+    font-family: 'Source Code Pro', san-serif;
+    height:27px;
+    background-color:rgba(0, 0, 0, 0.8);
+    padding-top:5px;
+    color: #fff;
+    border-color: #CCD0BA;
+    text-align:center;
+  }
+</style>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect('http://zenithradio.local:8080');
+
+  // on connection to server, request the current station
+  socket.on('connect', function() {
+    socket.emit('getCurrentStation');
+  });
+
+  socket.on('updatestation', function (station) {
+    var theImg = document.getElementById('station');
+    
+    if(station == 'kexp')
+    {
+      theImg.src='btn_kexp.png';
+    }
+    else if(station == 'npr')
+    {
+      theImg.src='btn_npr.png';
+    }
+    else // shairport
+    {
+      theImg.src='btn_shair.png';
+    }
+  });
+
+  function toggle()
+  {
+    socket.emit('getNextStation', 'npr');
+  }
+
+  function blockmove()
+  {
+    event.preventDefault();
+  }
+
+</script>
+</head>
+<body onload="window.top.scrollTo(0,1);" ontouchmove="blockmove();"> 
+  <div id="container">
+    <div id="body">
+      <img id='station' src='btn_shair.png' onclick="toggle();"/>
+      <br>
+      <input type="range" name="volume" min="1" max="100">
+    </div>
+    <div id="footer">@SasquatchFuzz</div>
+  </div>
+</body>
+</html>

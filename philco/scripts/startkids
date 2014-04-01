@@ -1,0 +1,4 @@
+pkill shairport
+mpc clear
+mpc load kids
+mpc play 1

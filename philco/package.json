@@ -1,0 +1,10 @@
+{
+     "name": "ZenithWebRadio",
+     "description": "Zenith Web Radio controller",
+     "version": "0.5.0",
+     "dependencies": {
+        "express": "",
+        "socket.io": "",
+        "zeparser": ""
+     }
+}
