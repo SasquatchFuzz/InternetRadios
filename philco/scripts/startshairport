@@ -2,4 +2,4 @@
 #
 
 mpc clear
-/opt/shairport/./shairport -a 'Zenith' &
+/opt/shairport/./shairport -a 'Philco' &
