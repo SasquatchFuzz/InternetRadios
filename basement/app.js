@@ -7,7 +7,6 @@ var express = require('express')
 server.listen(8080);
 
 app.use(express.static(__dirname + '/img'));
-app.use(express.static(__dirname + '/scripts'));
 
 // routing
 app.get('/', function (req, res) {
@@ -45,14 +44,6 @@ io.sockets.on('connection', function (socket) {
     if(station == 'shairport')
     {
       station='kexp';
-    }
-    else if(station == 'kexp')
-    {
-      station='npr';
-    }
-    else if(station == 'npr')
-    {
-      station='kids';
     }
     else // shairport
     {
