@@ -18,21 +18,16 @@
     -webkit-user-select: none;
   }
   #station{
-    margin-top: 133px;
-    margin-left: 29px;
-  }
-  #volumedown { 
-    margin-left: 0px;
-  } 
-  #volumemute { 
-    margin-left: 0px; 
-    margin-right: 0px;
+    margin-top: 35px;
+    margin-left: 30px;
   }
   .volume { 
     margin-top: 34px;
+    margin-left: -1px;
+    float: left;
     -webkit-user-select: none;
   }
-  #volumebar { 
+  #volumearc { 
     margin-top: 11px;
     margin-left: 29px;
     margin-bottom: 0px;
@@ -48,7 +43,7 @@
 </style>
 <script src="/socket.io/socket.io.js"></script>
 <script>
-  var socket = io.connect('http://philco.local:8080');
+  var socket = io.connect('http://ub1204x64.local:8080');
 
   // on connection to server, request the current station
   socket.on('connect', function() {
@@ -67,7 +62,7 @@
     }
     else // shairport
     {
-      station.src='btn_shair.gif';
+      station.src='btn_shair.png';
     }
   });
 
@@ -159,10 +154,10 @@
   <div id="container">
     <div id="body">
       <img id='header' src='header.gif'/>
+
       <img id='station' src='btn_shair.png' onclick="toggleStation();"/>
-      <canvas id="volumebar"></canvas>
-      <img id='volumedown' class='volume' src='btn_vol_down.gif'"/>
-      <img id='volumemute' class='volume' src='btn_vol_mute.gif'"/>
+      <img id='volumedown' class='volume' src='btn_vol_down.gif'/>
+      <img id='volumemute' class='volume' src='btn_vol_mute.gif'/>
       <img id='volumeup' class='volume' src='btn_vol_up.gif'/>
     </div>
   </div>
