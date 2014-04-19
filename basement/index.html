@@ -1,0 +1,170 @@
+<html>
+<head>
+  <title>Basement Radio</title>
+  <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <style media="screen" type="text/css">
+  html,
+  body {
+    margin:0;
+    padding:0;
+    background:#4d4d4d;
+    width: 320px;
+    height: 548px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    -webkit-user-select: none;
+  }
+  #station{
+    margin-top: 133px;
+    margin-left: 29px;
+  }
+  #volumedown { 
+    margin-left: 0px;
+  } 
+  #volumemute { 
+    margin-left: 0px; 
+    margin-right: 0px;
+  }
+  .volume { 
+    margin-top: 34px;
+    -webkit-user-select: none;
+  }
+  #volumebar { 
+    margin-top: 11px;
+    margin-left: 29px;
+    margin-bottom: 0px;
+    width: 262px;
+    height: 34px;
+  }
+  .dark {
+    -webkit-filter: brightness(50%);
+  }
+  .hidden {
+    opacity:0;
+  }
+</style>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io.connect('http://philco.local:8080');
+
+  // on connection to server, request the current station
+  socket.on('connect', function() {
+    socket.emit('getCurrentStation');
+    socket.emit('getVolume');
+  });
+
+  socket.on('updatestation', function (new_station) {
+    var station = document.getElementById('station');
+    
+    station.className = '';
+
+    if(new_station == 'kexp')
+    {
+      station.src='btn_kexp.png';
+    }
+    else // shairport
+    {
+      station.src='btn_shair.gif';
+    }
+  });
+
+  socket.on('updatevolume', function (volume)
+  {
+    // var c=document.getElementById("volumebar");
+    // var ctx=c.getContext("2d");
+    // ctx.fillStyle="#fff";
+    // ctx.fillRect(0,0,c.width,c.height);
+    // ctx.fillStyle="#740c15";
+    // ctx.fillRect(0,0,(volume/31)*c.width,c.height);
+
+    var mute=document.getElementById("volumemute");
+    if(volume == 0)
+      mute.className="volume hidden";
+    else
+      mute.className="volume";
+  });
+
+  function init()
+  {
+    window.top.scrollTo(0,1);
+
+    var buttons=document.getElementsByClassName("volume");
+    for (var i = 0; i < buttons.length; ++i) {
+      buttons[i].addEventListener("mousedown", volEvent, false);
+      buttons[i].addEventListener("mouseleave", volEvent, false);
+      buttons[i].addEventListener("mouseup", volEvent, false);
+      buttons[i].addEventListener("touchstart", volEvent, false);
+      buttons[i].addEventListener("touchend", volEvent, false);
+      buttons[i].addEventListener("touchcancel", volEvent, false);
+      buttons[i].addEventListener("touchleave", volEvent, false);
+      
+      
+      buttons[i].addEventListener("dragstart", blockMove, false);
+    }
+  }
+
+  function toggleStation()
+  {
+    var station = document.getElementById('station');
+    station.className = 'dark';
+    socket.emit('getNextStation', 'npr');
+  }
+
+  function blockMove()
+  {
+    event.preventDefault();
+  }
+
+  var volumetimer;
+  var activevol;
+
+  function setVol()
+  {
+    if( activevol.id == 'volumedown')
+      socket.emit('setVolume', '1-');
+    else if(activevol.id == 'volumeup')
+      socket.emit('setVolume', '1+');
+  }
+  
+  function volEvent(e)
+  {
+    if((e.type == "mousedown")||(e.type == "touchstart"))
+    {
+      activevol = e.currentTarget;
+      if(activevol.id == 'volumemute')
+      {
+          activevol.className='volume hidden';
+          activevol=null;  
+          socket.emit('setVolume', '0');  
+      }
+      else
+      {
+        activevol.className = 'volume dark';
+        volumetimer=setInterval(setVol,250);
+      }
+    }
+    else if(activevol != null)
+    {
+      clearInterval(volumetimer);
+      activevol.className='volume';
+      activevol=null;  
+    }
+  }
+</script>
+</head>
+<body onload="init();" ontouchmove="blockMove();"> 
+  <div id="container">
+    <div id="body">
+      <img id='header' src='header.gif'/>
+      <img id='station' src='btn_shair.png' onclick="toggleStation();"/>
+      <canvas id="volumebar"></canvas>
+      <img id='volumedown' class='volume' src='btn_vol_down.gif'"/>
+      <img id='volumemute' class='volume' src='btn_vol_mute.gif'"/>
+      <img id='volumeup' class='volume' src='btn_vol_up.gif'/>
+    </div>
+  </div>
+</body>
+</html>

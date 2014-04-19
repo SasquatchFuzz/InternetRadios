@@ -1,0 +1,7 @@
+#!/bin/bash
+#
+
+pkill shairport
+mpc clear
+mpc load kexp
+mpc play 1
