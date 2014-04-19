@@ -2,4 +2,4 @@
 #
 
 mpc clear
-/opt/shairport/./shairport -a 'Philco' &
+/opt/shairport/./shairport -a 'Basement' &
