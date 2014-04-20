@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>Basement Radio</title>
+  <title>Basement</title>
   <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -23,16 +23,13 @@
   }
   .volume { 
     margin-top: 34px;
-    margin-left: -1px;
     float: left;
     -webkit-user-select: none;
   }
   #volumearc { 
-    margin-top: 11px;
-    margin-left: 29px;
-    margin-bottom: 0px;
-    width: 262px;
-    height: 34px;
+    position: fixed;
+    left: 0px;
+    top: 99px;
   }
   .dark {
     -webkit-filter: brightness(50%);
@@ -68,12 +65,26 @@
 
   socket.on('updatevolume', function (volume)
   {
-    // var c=document.getElementById("volumebar");
-    // var ctx=c.getContext("2d");
-    // ctx.fillStyle="#fff";
-    // ctx.fillRect(0,0,c.width,c.height);
-    // ctx.fillStyle="#740c15";
-    // ctx.fillRect(0,0,(volume/31)*c.width,c.height);
+    var c=document.getElementById("volumearc");
+    var ctx=c.getContext("2d");
+    var x = c.width/2;
+    var y = c.height/2;
+    
+    var radius = 263/2 + 9;
+    var startAngle = 0.625 * Math.PI;
+    var endAngle = (1.75*(volume/31) + 0.625) * Math.PI;
+    var counterClockwise = false;
+
+    c.width=c.width;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, startAngle, endAngle, counterClockwise);
+    ctx.lineWidth = 20;
+
+    // line color
+    ctx.webkitImageSmoothingEnabled=true;
+    ctx.strokeStyle = '#cdcdcd';
+    ctx.stroke();
+
 
     var mute=document.getElementById("volumemute");
     if(volume == 0)
@@ -154,8 +165,8 @@
   <div id="container">
     <div id="body">
       <img id='header' src='header.gif'/>
-
       <img id='station' src='btn_shair.png' onclick="toggleStation();"/>
+      <canvas id="volumearc" width="320" height="332"></canvas>
       <img id='volumedown' class='volume' src='btn_vol_down.gif'/>
       <img id='volumemute' class='volume' src='btn_vol_mute.gif'/>
       <img id='volumeup' class='volume' src='btn_vol_up.gif'/>
