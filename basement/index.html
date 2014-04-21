@@ -70,7 +70,7 @@
     var x = c.width/2;
     var y = c.height/2;
     
-    var radius = 263/2 + 9;
+    var radius = 263/2 + 5;
     var startAngle = 0.625 * Math.PI;
     var endAngle = (1.75*(volume/31) + 0.625) * Math.PI;
     var counterClockwise = false;
@@ -78,7 +78,7 @@
     c.width=c.width;
     ctx.beginPath();
     ctx.arc(x, y, radius, startAngle, endAngle, counterClockwise);
-    ctx.lineWidth = 20;
+    ctx.lineWidth = 18;
 
     // line color
     ctx.webkitImageSmoothingEnabled=true;
@@ -106,7 +106,6 @@
       buttons[i].addEventListener("touchend", volEvent, false);
       buttons[i].addEventListener("touchcancel", volEvent, false);
       buttons[i].addEventListener("touchleave", volEvent, false);
-      
       
       buttons[i].addEventListener("dragstart", blockMove, false);
     }
@@ -165,8 +164,8 @@
   <div id="container">
     <div id="body">
       <img id='header' src='header.gif'/>
-      <img id='station' src='btn_shair.png' onclick="toggleStation();"/>
-      <canvas id="volumearc" width="320" height="332"></canvas>
+      <img id='station' src='btn_shair.png' />
+      <canvas id="volumearc" width="320" height="332" onclick="toggleStation();"></canvas>
       <img id='volumedown' class='volume' src='btn_vol_down.gif'/>
       <img id='volumemute' class='volume' src='btn_vol_mute.gif'/>
       <img id='volumeup' class='volume' src='btn_vol_up.gif'/>
